@@ -13,9 +13,9 @@ from tensorflow import keras
 class EditDistance(keras.metrics.Metric):
     def __init__(self, name='edit_distance', **kwargs):
         super().__init__(name=name, **kwargs)
-        self.total = self.add_weight(name='total', initializer='zeros')
+        self.total = self.add_weight(name='total', initializer='zeros', dtype=tf.float32)
         self.sum_distance = self.add_weight(name='sum_distance',
-                                            initializer='zeros')
+                                            initializer='zeros', dtype=tf.float32)
 
     def update_state(self, y_true, y_pred, sample_weight=None):
         y_pred_shape = tf.shape(y_pred)
@@ -30,7 +30,7 @@ class EditDistance(keras.metrics.Metric):
         self.total.assign_add(batch_size)
 
     def result(self):
-        return self.sum_distance / (self.total + 1e-5)
+        return self.sum_distance / tf.clip_by_value(self.total, 1e-8, tf.reduce_max(self.total))
 
     def reset_states(self):
         self.sum_distance.assign(0)

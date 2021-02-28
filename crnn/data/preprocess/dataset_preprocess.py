@@ -41,7 +41,6 @@ class Preprocess:
     def load_and_preprocess_image(self, path, label):
         image = tf.io.read_file(path)
         image = tf.image.decode_jpeg(image, channels=3)
-        image_shape = self.input_features
         # 饱和度
         image = tf.image.random_saturation(image, 0, 3)
         # 色调
@@ -50,19 +49,25 @@ class Preprocess:
         image = tf.image.random_contrast(image, 0.5, 5)
         # 亮度
         image = tf.image.random_brightness(image, max_delta=0.05)
-        image = image / 255
-        image -= 0.5
-        image /= 0.5
-        resized_image = tf.image.resize(image, [image_shape[0], image_shape[1]], preserve_aspect_ratio=True)
-        padding_im = tf.image.pad_to_bounding_box(resized_image, 0, 0, image_shape[0], image_shape[1])
+        # resize图片
+        img_shape = tf.shape(image)
+        scale_factor = self.input_features[0] / img_shape[0]
+        img_width = scale_factor * tf.cast(img_shape[1], tf.float64)
+        img_width = tf.cast(img_width, tf.int32)
+        resize_image = tf.image.resize(image, (self.input_features[0], img_width))
+        padding_im = tf.image.pad_to_bounding_box(resize_image, 0, 0, self.input_features[0], self.input_features[1])
         return padding_im, label
 
     def load_and_preprocess_image_predict(self, path):
         image = tf.io.read_file(path)
         image = tf.image.decode_jpeg(image, channels=3)
-        image_shape = self.input_features
-        resized_image = tf.image.resize(image, [image_shape[0], image_shape[1]], preserve_aspect_ratio=True)
-        padding_im = tf.image.pad_to_bounding_box(resized_image, 0, 0, image_shape[0], image_shape[1])
+        # resize图片
+        img_shape = tf.shape(image)
+        scale_factor = self.input_features[0] / img_shape[0]
+        img_width = scale_factor * tf.cast(img_shape[1], tf.float64)
+        img_width = tf.cast(img_width, tf.int32)
+        resize_image = tf.image.resize(image, (self.input_features[0], img_width))
+        padding_im = tf.image.pad_to_bounding_box(resize_image, 0, 0, self.input_features[0], self.input_features[1])
         return padding_im
 
     def decode_label(self, img, label):
@@ -87,7 +92,7 @@ class Preprocess:
         return ds
 
     def build_test(self):
-        image_paths = [os.path.join(self.test_path, img) for img in sorted(os.listdir(self.test_path))]
+        image_paths = [os.path.join(self.test_path, img) for img in sorted(os.listdir(self.test_path)) if '.jpg' in img]
         image_labels = []
         for file in image_paths:
             with open(file.replace('.jpg', '.txt'), 'r', encoding='utf8') as f:

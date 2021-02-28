@@ -11,10 +11,11 @@ import tensorflow as tf
 from configs.config import params
 from crnn.metrics import Accuracy
 from crnn.losses.ctc_loss import CTCLoss
+from crnn.data.postprocess.decode import Decoder
 from crnn.data.preprocess.dataset_preprocess import Preprocess
+from tests.accuracy import acc
 
-
-def main(param):
+def test(param):
     # 构建训练集
     dataset = Preprocess(param)
     ds, labels = dataset.build_test()
@@ -25,15 +26,19 @@ def main(param):
     model.compile(
         optimizer=tf.keras.optimizers.Adam(param["learning_rate"]),
         loss=CTCLoss(),
-        #metrics=[Accuracy()]
+        metrics=[Accuracy()]
     )
     # 查看模型结构
     model.summary()
     # 预测
     test_ds = next(iter(ds))
     result = model.predict(test_ds)
-    print(result)
+    decoder = Decoder(param)
+    y_pred = decoder.decode(result, method='greedy')
+    acc_1, acc_2 = acc(labels, y_pred)
+    print("Predict: ", acc_1)
+    print("Accuracy: ", acc_2)
 
 
 if __name__ == '__main__':
-    main(params)
+    test(params)

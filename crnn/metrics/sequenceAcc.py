@@ -13,8 +13,8 @@ from tensorflow import keras
 class SequenceAccuracy(keras.metrics.Metric):
     def __init__(self, name='sequence_accuracy', **kwargs):
         super().__init__(name=name, **kwargs)
-        self.total = self.add_weight(name='total', initializer='zeros')
-        self.count = self.add_weight(name='count', initializer='zeros')
+        self.total = self.add_weight(name='total', initializer='zeros', dtype=tf.float32)
+        self.count = self.add_weight(name='count', initializer='zeros', dtype=tf.float32)
 
     def update_state(self, y_true, y_pred, sample_weight=None):
         y_true_shape = tf.shape(y_true)
@@ -42,7 +42,7 @@ class SequenceAccuracy(keras.metrics.Metric):
         return tensor
 
     def result(self):
-        return self.count / (self.total + 1e-5)
+        return self.count / tf.clip_by_value(self.total, 1e-8, tf.reduce_max(self.total))
 
     def reset_states(self):
         self.count.assign(0)

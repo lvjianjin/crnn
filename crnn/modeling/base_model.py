@@ -19,14 +19,21 @@ class BaseModel:
     """
     def __init__(self, cnn_network=vgg, rnn_network=lstm, param=params):
         self.input_features = (param['input_features'][0], None, param['input_features'][2])
+        self.rescaling = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
         self.cnn_network = cnn_network
         self.rnn_network = rnn_network
         self.dense = tf.keras.layers.Dense(units=param['output_features'])
 
     def build(self):
+        # 输入层
         inputs = tf.keras.Input(shape=self.input_features)
-        x = self.cnn_network(inputs)
+        # 图片标准化
+        x = self.rescaling(inputs)
+        # cnn结构网络层
+        x = self.cnn_network(x)
+        # rnn结构网络层
         x = self.rnn_network(x)
+        # 输出层
         outputs = self.dense(x)
         return tf.keras.Model(inputs=inputs, outputs=outputs, name="crnn")
 

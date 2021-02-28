@@ -2,16 +2,16 @@ English | [简体中文](readme_ch.md)
 
 ## Introduction
 
-A crnn project.
+A crnn project based on Tensorflow2.
 
 ## Features
 
-1. Support Chinese and English recognition.
+1. Refactoring.
 
 ## Requirements
 
 - Python 3.6+
-- Tensorflow 2.2.0+
+- Tensorflow 2.4.1
 
 ## Recent updates
 
@@ -30,13 +30,42 @@ A crnn project.
 
 ### python
 
+Install the required Python packages,
+```
+pip install -r requirements.txt
+```
 ### docker
 
 ## Usage
 
 ### train
 
+1. Pull code
+
+```
+git clone https://github.com/lvjianjin/crnn.git
+```
+2. Prepare the data set
+
+Download the dataset to the local, and modify the local dataset path to dataset_path in ./configs/config.py.
+```
+链接：https://pan.baidu.com/s/1FgdITVrM_HsyNh7QSpePjw 
+提取码：iakr
+解压密码:chineseocr
+```
+3. training
+
+执行训练代码,
+```
+python main.py -m train
+```
+
 ### test
+
+Execute training code,
+```
+python main.py -m test
+```
 
 ## Contact
 

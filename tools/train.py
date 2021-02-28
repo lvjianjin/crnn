@@ -15,26 +15,35 @@ import tensorflow as tf
 import os
 
 
-def main():
+def train(param):
     # 构建训练集
-    dataset = Preprocess(params)
+    dataset = Preprocess(param)
     ds_train = dataset.build('train')
     ds_train_size = dataset.size('train')
     ds_val = dataset.build('val')
     ds_val_size = dataset.size('val')
     # 构建模型
     basemodels = BaseModel()
-    model = basemodels.build()
+    if param['retrain']:
+        model = basemodels.build()
+    else:
+        model = tf.keras.models.load_model(
+            os.path.join(
+                param['save_path'],
+                'crnn_{0}.h5'.format(str(param['initial_epoch']))
+            ), compile=False)
+    # 加载预训练模型
+
     # 模型编译
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(params["learning_rate"]),
+        optimizer=tf.keras.optimizers.Adam(param["learning_rate"]),
         loss=CTCLoss(),
-        # metrics=[Accuracy()]
+        metrics=[Accuracy()]
     )
     # 回调函数
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint(
-            os.path.join(params['save_path'], "crnn_{epoch}.h5"),
+            os.path.join(param['save_path'], "crnn_{epoch}.h5"),
             monitor='val_loss',
             verbose=1
         ),
@@ -45,13 +54,13 @@ def main():
     model.fit(
         ds_train,
         epochs=params["epochs"],
-        steps_per_epoch=ds_train_size // params["batch"],
-        initial_epoch=params["initial_epoch"],
+        steps_per_epoch=ds_train_size // param["batch"],
+        initial_epoch=param["initial_epoch"],
         validation_data=ds_val,
-        validation_steps=ds_val_size // params["batch"],
+        validation_steps=ds_val_size // param["batch"],
         callbacks=callbacks,
     )
 
 
 if __name__ == '__main__':
-    main()
+    main(params)

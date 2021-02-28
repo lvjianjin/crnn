@@ -11,17 +11,16 @@
 ## 必要条件
 
 - Python 3.6+
-- Tensorflow 2.2.0+
+- Tensorflow 2.4.1
 
 ## 近期更新
 
-**`2021-2-20`**: 支持银行卡数字识别。
+**`2021-2-20`**: 代码重构。
 
 ## 内容
 
 - [安装](#安装)
     - [python](#python)
-    - [docker](#docker)
 - [使用](#使用)
     - [训练](#训练)
     - [测试](#测试)
@@ -30,14 +29,38 @@
 
 ### python
 
-### docker
+安装所需Python包,
+```
+pip install -r requirements.txt
+```
 
 ## 使用
 
 ### 训练
+1. 拉取项目代码
 
+```
+git clone https://github.com/lvjianjin/crnn.git
+```
+2. 准备数据集
+
+下载数据集至本地，并将本地数据集路径修改至./configs/config.py中的dataset_path。
+```
+链接：https://pan.baidu.com/s/1FgdITVrM_HsyNh7QSpePjw 
+提取码：iakr
+解压密码:chineseocr
+```
+3. 训练
+
+执行训练代码,
+```
+python main.py -m train
+```
 ### 测试
-
+执行训练代码,
+```
+python main.py -m test
+```
 ## 联系
 
 1. 邮箱：jianjinlv@163.com
