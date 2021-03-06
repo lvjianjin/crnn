@@ -4,7 +4,7 @@
 # @eMail     : jianjinlv@163.com
 # @File      : main
 # @Software  : PyCharm
-# @Dscription: 
+# @Dscription: 项目主程序
 
 
 import sys, getopt

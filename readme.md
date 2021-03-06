@@ -4,6 +4,18 @@ English | [简体中文](readme_ch.md)
 
 A crnn project based on Tensorflow2.
 
+![model](./docs/image/model.png)
+
+## Demo
+
+### digit
+
+![number](./docs/image/demo_number.jpg)
+
+### chinese
+
+![chinese](./docs/image/demo_chinese.png) 
+
 ## Features
 
 1. Refactoring.
@@ -16,6 +28,7 @@ A crnn project based on Tensorflow2.
 ## Recent updates
 
 **`2020-10-13`**: The first version is online.
+**`2021-3-6`**: Open source data [construction tools](https://github.com/lvjianjin/TextRecognitionDataGenerator) 。
 
 ## Contents
 
@@ -47,7 +60,13 @@ git clone https://github.com/lvjianjin/crnn.git
 ```
 2. Prepare the data set
 
-Download the dataset to the local, and modify the local dataset path to dataset_path in ./configs/config.py.
+#### digit dataset
+
+Generate simulation data through [this tool](https://github.com/lvjianjin/TextRecognitionDataGenerator), and modify the local dataset path to dataset_path in ./configs/config.py.
+
+#### chinese dataset
+
+Generate simulation data through [this tool](https://github.com/lvjianjin/TextRecognitionDataGenerator) or download the following Chinese data set to the local, and modify the local data set path to dataset_path in ./configs/config.py.
 ```
 链接：https://pan.baidu.com/s/1FgdITVrM_HsyNh7QSpePjw 
 提取码：iakr
@@ -66,6 +85,10 @@ Execute training code,
 ```
 python main.py -m test
 ```
+
+## Pre-trained model
+
+The pre-trained model will be released soon, so stay tuned.
 
 ## Contact
 

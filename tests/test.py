@@ -8,12 +8,14 @@
 
 import os
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from configs.config import params
 from crnn.metrics import Accuracy
-from crnn.losses.ctc_loss import CTCLoss
+from crnn.utils.accuracy import acc
+from crnn.losses.loss import CTCLoss
 from crnn.data.postprocess.decode import Decoder
 from crnn.data.preprocess.dataset_preprocess import Preprocess
-from tests.accuracy import acc
+
 
 def test(param):
     # 构建训练集
@@ -24,7 +26,7 @@ def test(param):
     model = tf.keras.models.load_model(model_path, compile=False)
     # 编译模型
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(param["learning_rate"]),
+        optimizer=tf.keras.optimizers.Adam(param["initial_learning_rate"]),
         loss=CTCLoss(),
         metrics=[Accuracy()]
     )
@@ -36,8 +38,10 @@ def test(param):
     decoder = Decoder(param)
     y_pred = decoder.decode(result, method='greedy')
     acc_1, acc_2 = acc(labels, y_pred)
-    print("Predict: ", acc_1)
-    print("Accuracy: ", acc_2)
+    print("Label: ", labels)
+    print("Predict: ", y_pred)
+    print("WordAcc: ", acc_1)
+    print("CharAcc: ", acc_2)
 
 
 if __name__ == '__main__':

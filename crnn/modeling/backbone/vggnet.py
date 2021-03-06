@@ -28,3 +28,12 @@ def vgg(x):
     x = tf.keras.layers.BatchNormalization(epsilon=1e-05, axis=1, momentum=0.1)(x)
     x = tf.keras.layers.Reshape((-1, 512))(x)
     return x
+
+
+if __name__ == '__main__':
+    from tensorflow.keras.models import Model
+    from tensorflow.keras.layers import Input
+
+    input = Input(shape=(32, 320, 3), name='the_input')
+    basemodel = Model(inputs=input, outputs=vgg(input))
+    basemodel.summary()

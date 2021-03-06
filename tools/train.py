@@ -9,7 +9,7 @@
 from crnn.data.preprocess.dataset_preprocess import Preprocess
 from crnn.modeling.base_model import BaseModel
 from crnn.metrics import Accuracy
-from crnn.losses.ctc_loss import CTCLoss
+from crnn.losses.loss import CTCLoss
 from configs.config import params
 import tensorflow as tf
 import os
@@ -32,13 +32,16 @@ def train(param):
                 param['save_path'],
                 'crnn_{0}.h5'.format(str(param['initial_epoch']))
             ), compile=False)
-    # 加载预训练模型
-
+    # 学习率衰减方法
+    decay = tf.keras.optimizers.schedules.ExponentialDecay(
+        initial_learning_rate=param["initial_learning_rate"],
+        decay_steps=1000,
+        decay_rate=0.96)
     # 模型编译
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(param["learning_rate"]),
+        optimizer=tf.keras.optimizers.Adam(decay),
         loss=CTCLoss(),
-        metrics=[Accuracy()]
+        # metrics=[Accuracy()]
     )
     # 回调函数
     callbacks = [
@@ -63,4 +66,4 @@ def train(param):
 
 
 if __name__ == '__main__':
-    main(params)
+    train(params)

@@ -28,3 +28,4 @@ class CTCLoss(tf.keras.losses.Loss):
             blank_index=self.blank_index
         )
         return tf.reduce_mean(loss)
+

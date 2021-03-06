@@ -8,25 +8,31 @@
 
 params = {
     # 是否重新训练模型
-    "retrain": True,
+    "retrain": False,
     # 训练轮数
     "epochs": 30,
     # 训练初始轮数
-    "initial_epoch": 0,
-    # 学习率
-    "learning_rate": 0.0001,
+    "initial_epoch": 3,
+    # 初始学习率
+    "initial_learning_rate": 0.001,
+    # 学习率衰减步数
+    "decay_steps": 1000,
+    # 学习率衰减率
+    "decay_rate": 0.96,
     # 批次大小
-    "batch": 256,
+    "batch": 16,
     # 打乱数据规模
     "buffer": 10000,
     # 字典路径
     "table_path": "./datasets/table.txt",
+    # cnn骨干网络
+    "cnn_model": 'vgg',
+    # rnn骨干网络
+    "rnn_model": 'lstm',
     # 输入图片大小
     "input_features": [32, 480, 3],
-    # 输出节点数
-    "output_features": 11,
     # 训练集路径
-    "dataset_path": "/content/drive/My Drive/dataset/ocr/crnn/bank_card/",
+    "dataset_path": r"D:\dataset\ocr\crnn\bank_card",
     # 测试数据路径
     "test_path": "./datasets/test",
     # 数据集索引路径
@@ -36,5 +42,5 @@ params = {
     # 准确率方法
     "accuracy": "SequenceAccuracy",
     # 测试模型序号
-    "test_epoch": 4,
+    "test_epoch": 24,
 }

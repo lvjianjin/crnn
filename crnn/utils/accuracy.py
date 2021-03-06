@@ -19,6 +19,6 @@ def acc(label_list, result_list):
     for i in range(len(label_list)):
         if label_list[i] == result_list[i]:
             flag_1 += 1
-        flag_2 += difflib.SequenceMatcher(None, label_list[i] ,result_list[i]).quick_ratio()
+        flag_2 += difflib.SequenceMatcher(None, label_list[i], result_list[i]).quick_ratio()
     return flag_1/len(label_list), flag_2/len(label_list)
 
