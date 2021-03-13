@@ -1,3 +1,4 @@
-tensorflow-gpu
+numpy
+tensorflow-gpu>=2.2.0
 opencv-python
 matplotlib

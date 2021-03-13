@@ -22,6 +22,19 @@ class Dataset:
         self.path = param["dataset_path"]
         self.index_path = param["dataset_index_path"]
         self.radio = param["input_features"][1] / param["input_features"][0]
+        self.max_length = param['max_length']
+        with open(param['table_path'], 'r') as f:
+            lines = f.readlines()
+            self.char_map = dict(zip([line.replace('\n', '') for line in lines], list(range(len(lines)))))
+
+    def is_valid_captcha(self, captcha):
+        """
+        Sanity check for corrupted images
+        """
+        for ch in captcha:
+            if not ch in self.char_map:
+                return False
+        return True
 
     def read(self, mode="train"):
         """
@@ -54,7 +67,8 @@ class Dataset:
                         with open(label_path) as f:
                             label = f.read().strip()
                         imgs = cv2.imread(file_path)
-                        if imgs.shape[1] / imgs.shape[0] <= self.radio and len(label) > 0:
+                        if imgs.shape[1] / imgs.shape[0] <= self.radio and len(label) > 0 and len(
+                                label) <= self.max_length and self.is_valid_captcha(label):
                             images.append((file_path, label))
         random.shuffle(images)
         for image, label in images:
@@ -75,3 +89,4 @@ if __name__ == '__main__':
 
     data = Dataset(params)
     train_image_paths, train_image_labels, val_image_paths, val_image_labels = data.read()
+    print(1)

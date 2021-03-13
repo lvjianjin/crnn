@@ -24,7 +24,7 @@
 ## 必要条件
 
 - Python 3.6+
-- Tensorflow 2.4.1
+- Tensorflow 2.2.0+
 
 ## 近期更新
 
