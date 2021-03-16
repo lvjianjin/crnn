@@ -34,7 +34,7 @@ def train(param):
         model = basemodels.build()
         # 模型编译
         model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+            optimizer=tf.keras.optimizers.Adam(learning_rate=param["initial_learning_rate"]),
             metrics=['accuracy']
         )
     else:

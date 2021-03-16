@@ -6,7 +6,7 @@
 # @Software  : PyCharm
 # @Dscription: 项目主程序
 
-
+import tensorflow as tf
 import sys, getopt
 from tools.train import train
 #from tests.test import test
@@ -14,6 +14,10 @@ from configs.config import params
 
 
 def main(param):
+    # 设置GPU仅需要时申请显存空间
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
     # 解析命令行参数
     mode = None
     argv = sys.argv[1:]

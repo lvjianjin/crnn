@@ -16,9 +16,9 @@ params = {
     # 初始学习率
     "initial_learning_rate": 0.001,
     # 批次大小
-    "batch": 256,
+    "batch": 16,
     # 打乱数据规模
-    "buffer": 10000,
+    "buffer": 1000,
     # 最大标签长度
     "max_length": 20,
     # 下采样次数
@@ -42,5 +42,5 @@ params = {
     # 准确率方法
     "accuracy": "SequenceAccuracy",
     # 测试模型序号
-    "test_epoch": 7,
+    "test_epoch": 15,
 }
