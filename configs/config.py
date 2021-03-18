@@ -16,9 +16,9 @@ params = {
     # 初始学习率
     "initial_learning_rate": 0.001,
     # 批次大小
-    "batch": 256,
+    "batch": 16,
     # 打乱数据规模
-    "buffer": 10000,
+    "buffer": 1000,
     # 最大标签长度
     "max_length": 20,
     # 下采样次数
@@ -32,9 +32,11 @@ params = {
     # 输入图片大小
     "input_features": [32, 480, 3],
     # 训练集路径
-    "dataset_path": r"D:\dataset\train\ocr\crnn\bank_card",
+    "train_dataset_path": r"D:\dataset\ocr\crnn\bank_card\train",
+    # 验证集路径
+    "val_dataset_path": r"D:\dataset\ocr\crnn\bank_card\val",
     # 测试数据路径
-    "test_path": "./datasets/test",
+    "test_dataset_path": r"D:\dataset\ocr\crnn\bank_card\test",
     # 数据集索引路径
     "dataset_index_path": "./datasets",
     # 模型保存路径
@@ -42,5 +44,5 @@ params = {
     # 准确率方法
     "accuracy": "SequenceAccuracy",
     # 测试模型序号
-    "test_epoch": 7,
+    "test_epoch": 26,
 }

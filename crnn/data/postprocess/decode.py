@@ -6,47 +6,40 @@
 # @Software  : PyCharm
 # @Dscription: 结果解析
 
+import numpy as np
 import tensorflow as tf
+from configs.config import params
+from crnn.data.preprocess.dataset_preprocess import DataGenerator, Dataset
+
+# 读取图片路径与对应标签
+data = Dataset(params)
+val_image_paths, val_image_labels = data.read()
+# 生成验证集
+data_generator = DataGenerator(param=params,
+                               data=val_image_paths,
+                               labels=val_image_labels,
+                               shuffle=False)
+characters = data_generator.characters
+labels_to_char = data_generator.labels_to_char
 
 
-class Decoder:
-    def __init__(self, param, merge_repeated=True):
-        """
+# A utility to decode the output of the network
+def decode_batch_predictions(pred):
+    pred = pred[:, :-2]
+    input_len = np.ones(pred.shape[0]) * pred.shape[1]
 
-        Args:
-            table: list, char map
-            blank_index: int(default: NUM_CLASSES - 1), the index of blank
-        label.
-            merge_repeated: bool
-        """
-        with open(param["table_path"], 'r', encoding='gbk') as f:
-            self.table = [char.strip() for char in f]
-            blank_index = len(self.table)
-        self.blank_index = blank_index
-        self.merge_repeated = merge_repeated
+    # Use greedy search. For complex tasks, you can use beam search
+    results = tf.keras.backend.ctc_decode(pred,
+                                          input_length=input_len,
+                                          greedy=True)[0][0]
 
-    def map2string(self, inputs):
-        strings = []
-        for i in inputs:
-            text = [self.table[char_index] for char_index in i
-                    if char_index != self.blank_index]
-            strings.append(''.join(text))
-        return strings
-
-    def decode(self, inputs, from_pred=True, method='greedy'):
-        if from_pred:
-            logit_length = tf.fill([tf.shape(inputs)[0]], tf.shape(inputs)[1])
-            if method == 'greedy':
-                decoded, _ = tf.nn.ctc_greedy_decoder(
-                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
-                    sequence_length=logit_length,
-                    merge_repeated=self.merge_repeated)
-            elif method == 'beam_search':
-                decoded, _ = tf.nn.ctc_beam_search_decoder(
-                    inputs=tf.transpose(inputs, perm=[1, 0, 2]),
-                    sequence_length=logit_length)
-            inputs = decoded[0]
-        decoded = tf.sparse.to_dense(inputs,
-                                     default_value=self.blank_index).numpy()
-        decoded = self.map2string(decoded)
-        return decoded
+    # Iterate over the results and get back the text
+    output_text = []
+    for res in results.numpy():
+        outstr = ''
+        for c in res:
+            if c < len(characters) and c >= 0:
+                outstr += labels_to_char[c]
+        output_text.append(outstr)
+    # return final text results
+    return output_text

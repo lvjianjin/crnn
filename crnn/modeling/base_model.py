@@ -30,6 +30,7 @@ class BaseModel:
             self.cnn_network = vgg
         self.rnn_network = rnn_network
         self.dense = tf.keras.layers.Dense(output_features, activation='softmax', kernel_initializer='he_normal')
+        self.param = params
 
     def build(self):
         # 输入层
@@ -47,5 +48,12 @@ class BaseModel:
         x = self.dense(x)
         # Loss层
         outputs = CTCLayer(name='ctc_loss')(labels, x, input_length, label_length)
-        return tf.keras.Model(inputs=[inputs_img, labels, input_length, label_length], outputs=outputs, name="crnn")
+        model = tf.keras.Model(inputs=[inputs_img, labels, input_length, label_length], outputs=outputs, name="crnn")
+
+        # Compile the model and return
+        model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=self.param['initial_learning_rate']),
+            metrics=['accuracy']
+        )
+        return model
 
