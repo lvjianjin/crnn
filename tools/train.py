@@ -15,49 +15,46 @@ import os
 
 
 def train(param):
-    # 读取图片路径与对应标签
-    data = Dataset(param)
-    train_image_paths, train_image_labels, val_image_paths, val_image_labels = data.read()
     # 生成训练集
+    train_data = Dataset(param, 'train')
+    train_image_paths, train_image_labels = train_data.read()
     train_data_generator = DataGenerator(param=params,
                                          data=train_image_paths,
                                          labels=train_image_labels,
                                          shuffle=True)
     # 生成验证集
+    train_data = Dataset(param, 'val')
+    val_image_paths, val_image_labels = train_data.read()
     valid_data_generator = DataGenerator(param=params,
                                          data=val_image_paths,
                                          labels=val_image_labels,
                                          shuffle=False)
     # 构建模型
-    basemodels = BaseModel()
+    basemodels = BaseModel(param=params)
     if param['retrain']:
         model = basemodels.build()
+<<<<<<< HEAD
         # 模型编译
         model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=param["initial_learning_rate"]),
             metrics=['accuracy']
         )
+=======
+>>>>>>> dev
     else:
-        # 自定义层
-        _custom_objects = {
-                            "CTCLayer": CTCLayer,
-                          }
-        model = tf.keras.models.load_model(
-            os.path.join(
-                param['save_path'],
-                'crnn_{0}.h5'.format(str(param['initial_epoch']))
-            ),
-            custom_objects=_custom_objects)
+        model = basemodels.build()
+        model.load_weights(os.path.join(param['save_path'], 'crnn_{0}.h5'.format(str(param['initial_epoch']))))
     # 回调函数
     callbacks = [
         # 模型保存
         tf.keras.callbacks.ModelCheckpoint(
             os.path.join(param['save_path'], "crnn_{epoch}.h5"),
             monitor='val_loss',
+            save_weights_only=True,
             verbose=1
         ),
         # 提前结束规则
-        tf.keras.callbacks.EarlyStopping(monitor='val_loss',
+        tf.keras.callbacks.EarlyStopping(monitor='val_accuracy',
                                          patience=5,
                                          restore_best_weights=True)
     ]
@@ -67,7 +64,8 @@ def train(param):
     model.fit(
         train_data_generator,
         validation_data=valid_data_generator,
-        epochs=params["epochs"],
+        initial_epoch=param['initial_epoch'],
+        epochs=param["epochs"],
         callbacks=callbacks
     )
 

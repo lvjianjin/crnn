@@ -12,6 +12,7 @@ import numpy as np
 import tensorflow as tf
 from configs.config import params
 from crnn.data.preprocess.dataset_read import Dataset
+from crnn.data.preprocess.augmentation import Augment
 
 
 class DataGenerator(tf.keras.utils.Sequence):
@@ -51,14 +52,19 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.on_epoch_end()
         with open(param['table_path'], 'r') as f:
             lines = f.readlines()
-            self.char_map = dict(zip([line.replace('\n', '') for line in lines], list(range(len(lines)))))
+            self.characters = [line.replace('\n', '') for line in lines]
+            # Map text to numeric labels
+            self.char_to_labels = {char: idx for idx, char in enumerate(self.characters)}
+
+            # Map numeric labels to text
+            self.labels_to_char = {val: key for key, val in self.char_to_labels.items()}
 
     def is_valid_captcha(self, captcha):
         """
         Sanity check for corrupted images
         """
         for ch in captcha:
-            if not ch in self.char_map:
+            if not ch in self.characters:
                 return False
         return True
 
@@ -88,6 +94,9 @@ class DataGenerator(tf.keras.utils.Sequence):
             # resize图片
             h = img.shape[0]
             w = img.shape[1]
+            # 图像增强
+            augment = Augment(h, w)
+            img = augment.apply(img)
             ratio = w / float(h)
             if math.ceil(self.img_height * ratio) > self.img_width:
                 resized_w = self.img_width
@@ -101,7 +110,7 @@ class DataGenerator(tf.keras.utils.Sequence):
             text = self.labels[idx]
             # padding label
             padding_label = np.ones((self.max_length,), dtype=np.int64)*(-1)
-            padding_label[0:len(text)] = [self.char_map[ch] for ch in text]
+            padding_label[0:len(text)] = [self.char_to_labels[ch] for ch in text]
             # 4. Include the pair only if the captcha is valid
             if self.is_valid_captcha(text):
                 label = padding_label
