@@ -2,28 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="51e85473-b14a-4ee7-b670-8275fdd49956" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/configs/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/data/postprocess/decode.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/postprocess/decode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/data/preprocess/dataset_preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/preprocess/dataset_preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/data/preprocess/dataset_read.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/preprocess/dataset_read.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/losses/layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/losses/layer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/modeling/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/modeling/base_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/5.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/6.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/test/7.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme_ch.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme_ch.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
