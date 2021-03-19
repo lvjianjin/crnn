@@ -9,7 +9,7 @@
 import tensorflow as tf
 import sys, getopt
 from tools.train import train
-#from tests.test import test
+from tests.test import test
 from configs.config import params
 import tensorflow as tf
 

@@ -11,11 +11,7 @@ import tensorflow as tf
 
 class CTCLayer(tf.keras.layers.Layer):
     def __init__(self, name=None):
-<<<<<<< HEAD
         super(CTCLayer, self).__init__(name=name)
-=======
-        super().__init__(name=name)
->>>>>>> dev
         self.loss_fn = tf.keras.backend.ctc_batch_cost
 
     def call(self, y_true, y_pred, input_length, label_length):

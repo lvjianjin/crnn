@@ -29,12 +29,8 @@ class BaseModel:
         else:
             self.cnn_network = vgg
         self.rnn_network = rnn_network
-<<<<<<< HEAD
-        self.dense = tf.keras.layers.Dense(output_features, activation='softmax')
-=======
         self.dense = tf.keras.layers.Dense(output_features, activation='softmax', kernel_initializer='he_normal')
         self.param = params
->>>>>>> dev
 
     def build(self):
         # 输入层

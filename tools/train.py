@@ -8,7 +8,6 @@
 
 from crnn.data.preprocess.dataset_preprocess import DataGenerator, Dataset
 from crnn.modeling.base_model import BaseModel
-from crnn.losses.layer import CTCLayer
 from configs.config import params
 import tensorflow as tf
 import os
@@ -33,14 +32,6 @@ def train(param):
     basemodels = BaseModel(param=params)
     if param['retrain']:
         model = basemodels.build()
-<<<<<<< HEAD
-        # 模型编译
-        model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=param["initial_learning_rate"]),
-            metrics=['accuracy']
-        )
-=======
->>>>>>> dev
     else:
         model = basemodels.build()
         model.load_weights(os.path.join(param['save_path'], 'crnn_{0}.h5'.format(str(param['initial_epoch']))))
@@ -55,7 +46,7 @@ def train(param):
         ),
         # 提前结束规则
         tf.keras.callbacks.EarlyStopping(monitor='val_accuracy',
-                                         patience=5,
+                                         patience=10,
                                          restore_best_weights=True)
     ]
     # 查看模型结构

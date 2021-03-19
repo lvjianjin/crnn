@@ -44,9 +44,5 @@ params = {
     # 准确率方法
     "accuracy": "SequenceAccuracy",
     # 测试模型序号
-<<<<<<< HEAD
-    "test_epoch": 15,
-=======
     "test_epoch": 26,
->>>>>>> dev
 }

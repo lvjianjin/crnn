@@ -3,6 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="51e85473-b14a-4ee7-b670-8275fdd49956" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crnn/data/postprocess/decode.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/postprocess/decode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crnn/data/preprocess/augmentation.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/preprocess/augmentation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crnn/losses/layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/losses/layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crnn/modeling/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/modeling/base_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/train/dataset.data" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/train/dataset.data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,17 +40,17 @@
   </component>
   <component name="RunManager" selected="Python.test">
     <configuration name="dataset_preprocess" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="crnn" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="D:\Anaconda\envs\tf24\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/crnn/data/preprocess/dataset_preprocess.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -73,17 +82,17 @@
       <method v="2" />
     </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="crnn" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="D:\Anaconda\envs\tf23\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -95,14 +104,14 @@
     </configuration>
     <list>
       <item itemvalue="Python.dataset_preprocess" />
-      <item itemvalue="Python.test" />
       <item itemvalue="Python.dataset_read" />
+      <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.dataset_read" />
         <item itemvalue="Python.dataset_preprocess" />
+        <item itemvalue="Python.dataset_read" />
       </list>
     </recent_temporary>
   </component>
@@ -122,7 +131,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
