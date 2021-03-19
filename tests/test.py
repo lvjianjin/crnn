@@ -9,10 +9,6 @@
 import os
 import tensorflow as tf
 from crnn.data.preprocess.dataset_preprocess import DataGenerator, Dataset
-from configs.config import params
-from crnn.metrics import Accuracy
-from crnn.utils.accuracy import acc
-from crnn.losses.layer import CTCLayer
 from crnn.data.postprocess.decode import decode_batch_predictions
 from configs.config import params
 from crnn.modeling.base_model import BaseModel

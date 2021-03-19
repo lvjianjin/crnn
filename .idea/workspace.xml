@@ -3,15 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="51e85473-b14a-4ee7-b670-8275fdd49956" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/configs/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/data/postprocess/decode.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/postprocess/decode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crnn/data/preprocess/augmentation.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/data/preprocess/augmentation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crnn/losses/layer.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/losses/layer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crnn/modeling/backbone/lstm.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/modeling/backbone/lstm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crnn/modeling/backbone/vggnet.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/modeling/backbone/vggnet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crnn/modeling/base_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/crnn/modeling/base_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/train/dataset.data" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/train/dataset.data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +33,31 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/CRNN_for_PyTorch" />
+    <property name="settings.editor.selected.configurable" value="tasks" />
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.augmentation">
+    <configuration name="augmentation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="crnn" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/crnn/data/preprocess" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/crnn/data/preprocess/augmentation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="dataset_preprocess" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -103,12 +122,14 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.augmentation" />
       <item itemvalue="Python.dataset_preprocess" />
       <item itemvalue="Python.dataset_read" />
       <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.augmentation" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.dataset_preprocess" />
         <item itemvalue="Python.dataset_read" />
@@ -152,6 +173,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/crnn/data/preprocess/augmentation.py</url>
+          <line>139</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

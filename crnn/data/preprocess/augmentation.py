@@ -21,25 +21,18 @@ class Augment:
         滤波
         """
         rand = random.randint(1, 3)
-        kenerl = random.randint(1, 3) * 2 + 1
         if rand == 1:
             # 均值滤波
+            kenerl = random.randint(1, 2) * 2 + 1
             return cv2.blur(image, (kenerl, kenerl))
         elif rand == 2:
             # 高斯滤波
+            kenerl = random.randint(1, 2) * 2 + 1
             return cv2.GaussianBlur(image, (kenerl, kenerl), 0, 0)
         else:
             # 中值滤波
+            kenerl = random.randint(1, 2) * 2 + 1
             return cv2.medianBlur(image, kenerl)
-
-    def sq_blur(self, image):  # 区域插值模糊，模拟图像低分辨率
-        """
-        模糊
-        """
-        rand = random.randint(1, 2)
-        if rand == 1:
-            image = cv2.resize(image, (self.h, self.w), interpolation=cv2.INTER_AREA)
-        return image
 
     def random_brightness(self, image):
         """
@@ -99,23 +92,22 @@ class Augment:
         添加到色调通道的量在-1和1之间的间隔。
         如果值超过180，则会旋转这些值。
         """
-        delta = random.uniform(0.8, 1.2)
-        image[..., 0] = np.mod(image[..., 0] + delta * 180, 180)  # 取余数
+        if random.randint(1, 10) > 8:
+            delta = random.uniform(-0.05, 0.05)
+            image[..., 0] = np.mod(image[..., 0] + delta * 180, 180)  # 取余数
         return image
 
     def adjust_saturation(self, image):
         """
         调整图片的饱和度
         """
-        factor = random.uniform(0.6, 1.2)
+        factor = random.uniform(0.95, 1.05)
         image[..., 1] = np.clip(image[..., 1] * factor, 0, 255)
         return image
 
     def apply(self, image):
         # 滤波
         image = self.blur(image)
-        # 模糊
-        image = self.sq_blur(image)
         # 亮度
         image = self.random_brightness(image)
         # 旋转
@@ -129,3 +121,20 @@ class Augment:
         # 饱和度
         image = self.adjust_saturation(image)
         return image
+
+
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    # 原图
+    path = r"D:\dataset\ocr\crnn\bank_card\test\0.jpg"
+    img = cv2.imread(path)
+    print(img.shape)
+    h, w, _ = img.shape
+    plt.imshow(img)
+    # 图像增强的类
+    augment = Augment(h, w)
+    # # 色彩反转
+    img1 = augment.apply(img)
+    plt.imshow(img1)
+
+    print(img1.shape)

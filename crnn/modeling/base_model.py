@@ -21,7 +21,7 @@ class BaseModel:
     """
     def __init__(self, rnn_network=lstm, param=params):
         with open(param['table_path'], 'r') as f:
-            output_features = len(f.readlines()) + 1
+            self.output_features = len(f.readlines()) + 1
         self.input_features = (param['input_features'][0], None, param['input_features'][2])
         self.rescaling = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)
         if param['cnn_model'] == 'dense':
@@ -29,7 +29,6 @@ class BaseModel:
         else:
             self.cnn_network = vgg
         self.rnn_network = rnn_network
-        self.dense = tf.keras.layers.Dense(output_features, activation='softmax', kernel_initializer='he_normal')
         self.param = params
 
     def build(self):
@@ -43,9 +42,7 @@ class BaseModel:
         # cnn结构网络层
         x = self.cnn_network(x)
         # rnn结构网络层
-        x = self.rnn_network(x)
-        # 输出层
-        x = self.dense(x)
+        x = self.rnn_network(x, self.output_features)
         # Loss层
         outputs = CTCLayer(name='ctc_loss')(labels, x, input_length, label_length)
         model = tf.keras.Model(inputs=[inputs_img, labels, input_length, label_length], outputs=outputs, name="crnn")
