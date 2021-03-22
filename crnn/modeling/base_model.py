@@ -12,7 +12,8 @@ from configs.config import params
 from crnn.modeling.backbone.vggnet import vgg
 from crnn.modeling.backbone.densenet import dense
 from crnn.modeling.backbone.lstm import lstm
-from crnn.losses.layer import CTCLayer
+from crnn.metrics.sequenceAcc import SequenceAccuracy
+from crnn.losses.loss import CTCLoss
 
 
 class BaseModel:
@@ -29,28 +30,26 @@ class BaseModel:
         else:
             self.cnn_network = vgg
         self.rnn_network = rnn_network
+        self.dense = tf.keras.layers.Dense(self.output_features)
         self.param = params
 
     def build(self):
         # 输入层
         inputs_img = tf.keras.Input(shape=self.input_features, name='input_data')
-        labels = tf.keras.layers.Input(name='input_label', shape=[20], dtype='float32')
-        input_length = tf.keras.layers.Input(name='input_length', shape=[1], dtype='int64')
-        label_length = tf.keras.layers.Input(name='label_length', shape=[1], dtype='int64')
         # 图片标准化
         x = self.rescaling(inputs_img)
         # cnn结构网络层
         x = self.cnn_network(x)
         # rnn结构网络层
-        x = self.rnn_network(x, self.output_features)
-        # Loss层
-        outputs = CTCLayer(name='ctc_loss')(labels, x, input_length, label_length)
-        model = tf.keras.Model(inputs=[inputs_img, labels, input_length, label_length], outputs=outputs, name="crnn")
-
+        x = self.rnn_network(x)
+        # 全连接层
+        outputs = self.dense(x)
+        model = tf.keras.Model(inputs=inputs_img, outputs=outputs, name="crnn")
         # Compile the model and return
         model.compile(
             optimizer=tf.keras.optimizers.Adam(learning_rate=self.param['initial_learning_rate']),
-            metrics=['accuracy']
+            loss=CTCLoss(),
+            metrics=[SequenceAccuracy()]
         )
         return model
 

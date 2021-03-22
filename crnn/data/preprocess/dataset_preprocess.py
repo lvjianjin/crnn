@@ -6,146 +6,102 @@
 # @Software  : PyCharm
 # @Dscription: 数据集预处理
 
-import math
-import cv2
-import numpy as np
+import os
 import tensorflow as tf
 from configs.config import params
 from crnn.data.preprocess.dataset_read import Dataset
-from crnn.data.preprocess.augmentation import Augment
 
 
-class DataGenerator(tf.keras.utils.Sequence):
-    """Generates batches from a given dataset.
-
-    Args:
-        data: training or validation data
-        labels: corresponding labels
-        char_map: dictionary mapping char to labels
-        batch_size: size of a single batch
-        img_width: width of the resized
-        img_height: height of the resized
-        downsample_factor: by what factor did the CNN downsample the images
-        max_length: maximum length of any captcha
-        shuffle: whether to shuffle data or not after each epoch
-    Returns:
-        batch_inputs: a dictionary containing batch inputs
-        batch_labels: a batch of corresponding labels
+class Preprocess:
+    """
+    构造传入模型训练的数据集
     """
 
-    def __init__(self,
-                 param,
-                 data,
-                 labels,
-                 shuffle=True
-                 ):
-        self.data = data
-        self.labels = labels
-        self.batch_size = param['batch']
-        self.img_width = param['input_features'][1]
-        self.img_height = param['input_features'][0]
-        self.img_color = param['input_features'][2]
-        self.downsample_factor = param['downsample_factor']
-        self.max_length = param['max_length']
-        self.shuffle = shuffle
-        self.indices = np.arange(len(data))
-        self.on_epoch_end()
-        with open(param['table_path'], 'r') as f:
-            lines = f.readlines()
-            self.characters = [line.replace('\n', '') for line in lines]
-            # Map text to numeric labels
-            self.char_to_labels = {char: idx for idx, char in enumerate(self.characters)}
+    def __init__(self, param):
+        self.input_features = param["input_features"]
+        self.test_path = param["test_dataset_path"]
+        self.batch = param["batch"]
+        self.buffer = param["buffer"]
+        self.table = tf.lookup.StaticHashTable(
+            tf.lookup.TextFileInitializer(
+                param["table_path"],
+                tf.string,
+                tf.lookup.TextFileIndex.WHOLE_LINE,
+                tf.int64, tf.lookup.TextFileIndex.LINE_NUMBER
+            ), -1)
+        train_data = Dataset(param, 'train')
+        self.train_image_paths, self.train_image_labels = train_data.read()
+        val_data = Dataset(param, 'val')
+        self.val_image_paths, self.val_image_labels = val_data.read()
 
-            # Map numeric labels to text
-            self.labels_to_char = {val: key for key, val in self.char_to_labels.items()}
+    def size(self, mode="train"):
+        if mode == "train":
+            return len(self.train_image_paths)
+        else:
+            return len(self.val_image_paths)
 
-    def is_valid_captcha(self, captcha):
-        """
-        Sanity check for corrupted images
-        """
-        for ch in captcha:
-            if not ch in self.characters:
-                return False
-        return True
+    def load_and_preprocess_image(self, path, label):
+        image = tf.io.read_file(path)
+        image = tf.image.decode_jpeg(image, channels=3)
+        # 饱和度
+        image = tf.image.random_saturation(image, 0, 3)
+        # 色调
+        image = tf.image.random_hue(image, 0.3)
+        # 对比度
+        image = tf.image.random_contrast(image, 0.5, 5)
+        # 亮度
+        image = tf.image.random_brightness(image, max_delta=0.05)
+        # resize图片
+        resize_image = tf.image.resize(image, self.input_features[:2], preserve_aspect_ratio=True)
+        padding_im = tf.image.pad_to_bounding_box(resize_image, 0, 0, self.input_features[0], self.input_features[1])
+        return padding_im, label
 
-    def __len__(self):
-        return int(np.ceil(len(self.data) / self.batch_size))
+    def load_and_preprocess_image_predict(self, path):
+        image = tf.io.read_file(path)
+        image = tf.image.decode_jpeg(image, channels=3)
+        # resize图片
+        resize_image = tf.image.resize(image, self.input_features[:2], preserve_aspect_ratio=True)
+        padding_im = tf.image.pad_to_bounding_box(resize_image, 0, 0, self.input_features[0], self.input_features[1])
+        return padding_im
 
-    def __getitem__(self, idx):
-        # 1. Get the next batch indices
-        curr_batch_idx = self.indices[idx * self.batch_size:(idx + 1) * self.batch_size]
+    def decode_label(self, img, label):
+        chars = tf.strings.unicode_split(label, "UTF-8")
+        tokens = tf.ragged.map_flat_values(self.table.lookup, chars)
+        tokens = tokens.to_sparse()
+        return img, tokens
 
-        # 2. This isn't necessary but it can help us save some memory
-        # as not all batches the last batch may not have elements
-        # equal to the batch_size
-        batch_len = len(curr_batch_idx)
+    def build(self, mode="train"):
+        if mode == "train":
+            image_paths, image_labels = self.train_image_paths, self.train_image_labels
+        else:
+            image_paths, image_labels = self.val_image_paths, self.val_image_labels
+        ds = tf.data.Dataset.from_tensor_slices((image_paths, image_labels))
+        ds = ds.map(self.load_and_preprocess_image, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds = ds.shuffle(buffer_size=self.buffer)
+        ds = ds.repeat()
+        ds = ds.batch(self.batch)
+        ds = ds.map(self.decode_label, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds = ds.apply(tf.data.experimental.ignore_errors())
+        ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
+        return ds
 
-        # 3. Instantiate batch arrays
-        batch_images = np.ones((batch_len, self.img_height, self.img_width, self.img_color),
-                               dtype=np.float32)
-        batch_labels = np.ones((batch_len, self.max_length), dtype=np.float32)
-        input_length = np.ones((batch_len, 1), dtype=np.int64) * \
-                       (self.img_width // self.downsample_factor - 2)
-        label_length = np.zeros((batch_len, 1), dtype=np.int64)
-
-        for j, idx in enumerate(curr_batch_idx):
-            # 1. Get the image and transpose it
-            img = cv2.imread(self.data[idx])
-            # resize图片
-            h = img.shape[0]
-            w = img.shape[1]
-            # 图像增强
-            augment = Augment(h, w)
-            img = augment.apply(img)
-            ratio = w / float(h)
-            if math.ceil(self.img_height * ratio) > self.img_width:
-                resized_w = self.img_width
-            else:
-                resized_w = int(math.ceil(self.img_height * ratio))
-            resized_image = cv2.resize(img, (resized_w, self.img_height))
-            resized_image = resized_image.astype('float32')
-            padding_im = np.zeros((self.img_height, self.img_width, self.img_color), dtype=np.float32)
-            padding_im[:, 0:resized_w, :] = resized_image
-            # 3. Get the correpsonding label
-            text = self.labels[idx]
-            # padding label
-            padding_label = np.ones((self.max_length,), dtype=np.int64)*(-1)
-            padding_label[0:len(text)] = [self.char_to_labels[ch] for ch in text]
-            # 4. Include the pair only if the captcha is valid
-            if self.is_valid_captcha(text):
-                label = padding_label
-                batch_images[j] = padding_im
-                batch_labels[j] = label
-                label_length[j] = len(text)
-
-        batch_inputs = {
-            'input_data': batch_images,
-            'input_label': batch_labels,
-            'input_length': input_length,
-            'label_length': label_length,
-        }
-        return batch_inputs, np.zeros(batch_len).astype(np.float32)
-
-    def on_epoch_end(self):
-        if self.shuffle:
-            np.random.shuffle(self.indices)
+    def build_test(self):
+        image_paths = [os.path.join(self.test_path, img) for img in sorted(os.listdir(self.test_path)) if '.jpg' in img]
+        image_labels = []
+        for file in image_paths:
+            with open(file.replace('.jpg', '.txt'), 'r', encoding='utf8') as f:
+                label = f.read()
+            image_labels.append(label)
+        ds = tf.data.Dataset.from_tensor_slices(image_paths)
+        ds = ds.map(self.load_and_preprocess_image_predict, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        ds = ds.repeat()
+        ds = ds.batch(len(image_paths))
+        ds = ds.apply(tf.data.experimental.ignore_errors())
+        ds = ds.prefetch(tf.data.experimental.AUTOTUNE)
+        return ds, image_labels
 
 
 if __name__ == '__main__':
-    # 字典
-    with open(params['table_path'], 'r') as f:
-        lines = f.readlines()
-        char_to_labels = dict(zip([line.replace('\n', '') for line in lines], list(range(len(lines)))))
-    # 读取图片路径与对应标签
-    data = Dataset(params)
-    train_image_paths, train_image_labels, val_image_paths, val_image_labels = data.read()
-    # 生成数据集
-    train_data_generator = DataGenerator(param=params,
-                                         data=train_image_paths,
-                                         labels=train_image_labels,
-                                         shuffle=True)
-    valid_data_generator = DataGenerator(param=params,
-                                         data=val_image_paths,
-                                         labels=val_image_labels,
-                                         shuffle=False)
-    print(train_data_generator)
+    dataset = Preprocess(params)
+    ds = dataset.build()
+    print(ds)

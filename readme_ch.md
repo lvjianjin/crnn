@@ -32,7 +32,7 @@
 
 **`2021-3-6`**: 开源数据集[构造工具](https://github.com/lvjianjin/TextRecognitionDataGenerator) 。
 
-**`2021-3-18`**: 增加数据增强模块。
+**`2021-3-22`**: 稳定版本上线。
 
 ## 内容
 
