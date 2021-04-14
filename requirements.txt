@@ -1,4 +1,5 @@
 numpy
 tensorflow-gpu>=2.2.0
+tensorflow-serving-api
 opencv-python
 matplotlib

@@ -7,7 +7,7 @@
 # @Dscription: 测试文件
 
 import os
-from crnn.data.preprocess.dataset_preprocess import Preprocess, Dataset
+from crnn.data.preprocess.dataset_preprocess import Preprocess
 from crnn.data.postprocess.decode import Decoder
 from configs.config import params
 from crnn.modeling.base_model import BaseModel
@@ -36,6 +36,7 @@ def test(param):
     acc1, acc2 = acc(y_pred, test_labels)
     print("========================================")
     print("严格准确率：{0} \t 相似准确率：{1}".format(acc1, acc2))
+
 
 if __name__ == '__main__':
     test(params)

@@ -21,7 +21,7 @@ class BaseModel:
     基础网络结构
     """
     def __init__(self, rnn_network=lstm, param=params):
-        with open(param['table_path'], 'r') as f:
+        with open(param['table_path'], 'r', encoding='utf8') as f:
             self.output_features = len(f.readlines()) + 1
         self.input_features = (param['input_features'][0], None, param['input_features'][2])
         self.rescaling = tf.keras.layers.experimental.preprocessing.Rescaling(1./255)

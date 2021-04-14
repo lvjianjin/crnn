@@ -18,7 +18,7 @@ class Decoder:
         label.
             merge_repeated: bool
         """
-        with open(param["table_path"], 'r', encoding='gbk') as f:
+        with open(param["table_path"], 'r', encoding='utf8') as f:
             self.table = [char.strip() for char in f]
             blank_index = len(self.table)
         self.blank_index = blank_index

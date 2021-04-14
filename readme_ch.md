@@ -34,6 +34,8 @@
 
 **`2021-3-22`**: 稳定版本上线。
 
+**`2021-4-14`**: 与训练模型对外开放。
+
 ## 内容
 
 - [安装](#安装)
@@ -80,17 +82,30 @@ git clone https://github.com/lvjianjin/crnn.git
 ```
 python main.py -m train
 ```
+查看tensorboard的命令如下，
+```commandline
+tensorboard --logdir=/home/lvjianjin/python-project/crnn/logs/date/20210330-144211 --host 192.168.46.230 --port 8006
+```
 
 ### 测试
 
-执行训练代码,
-```
-python main.py -m test
-```
+启动jupyter，执行./tests/demo.ipynb文件。
 
 ##预训练模型
 
-预训练模型将在近期发布，敬请期待。
+### 模型结果文件
+
+```commandline
+链接：https://pan.baidu.com/s/1rH__qsTwEUJZ4zc6gx_zjg 
+提取码：bcy0
+```
+
+### tensorflow-serving部署文件
+
+```commandline
+链接：https://pan.baidu.com/s/1hpeRbvO_dY5vt0AOmUX8Hg 
+提取码：18n7 
+```
 
 ## 联系
 

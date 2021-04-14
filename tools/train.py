@@ -10,6 +10,7 @@ from crnn.data.preprocess.dataset_preprocess import Preprocess
 from crnn.modeling.base_model import BaseModel
 from configs.config import params
 import tensorflow as tf
+import datetime
 import os
 
 
@@ -39,7 +40,13 @@ def train(param):
         # 提前结束规则
         tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                          patience=20,
-                                         restore_best_weights=True)
+                                         restore_best_weights=True),
+        # tensorboard
+        tf.keras.callbacks.TensorBoard(log_dir=os.path.join(param['log_dir'],
+                                                            datetime.datetime.now().strftime("%Y%m%d-%H%M%S")),
+                                       histogram_freq=1),
+        # 学习率自动下降机制
+        tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=0.00000001)
     ]
     # 查看模型结构
     model.summary()
